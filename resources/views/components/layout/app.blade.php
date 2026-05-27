@@ -1,9 +1,25 @@
 @props(['title' => 'The Grand Wizarding Conquest'])
 
+@php
+    use Illuminate\Support\Facades\Storage;
+
+    $backgroundUrl = '';
+    $logoUrl = '';
+    try {
+        // Meminta URL sementara dari Backblaze (berlaku 60 menit)
+        $backgroundUrl = Storage::disk('s3')->temporaryUrl('Assets/Backgrounds/background.png', now()->addMinutes(60));
+        $logoUrl = Storage::disk('s3')->temporaryUrl('Assets/Logo/logo-isfest.png', now()->addMinutes(60));
+    } catch (\Exception $e) {
+        // Fallback aman: Jika .env belum disetting atau sedang offline, pakai gambar lokal
+        $backgroundUrl = asset('backgrounds/background.png');
+        $logoUrl = asset('logo/logo-isfest.png');
+    }
+@endphp
+
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-  <link rel="icon" type="image/png" href="{{ asset('Asset/logo-isfest.png') }}" />
+  <link rel="icon" type="image/png" href="{{ $logoUrl }}" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title> ISFEST 2026 | {{ $title }}</title>
@@ -47,10 +63,15 @@
 </head>
 <body class="selection:bg-[#ffec1f]/20 selection:text-[#ffec1f] min-h-screen flex flex-col overflow-x-hidden">
 
+  {{-- MEMANGGIL KOMPONEN SPLASH SCREEN --}}
+  <x-splashscreen />
+
   {{-- BACKGROUND LAYER DENGAN ANIMASI ZOOMING --}}
   <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#0a101d]">
+      
+      {{-- Gambar Background Dipanggil dari Variable $backgroundUrl --}}
       <img 
-        src="{{ asset('backgrounds/background.png') }}" 
+        src="{{ $backgroundUrl }}" 
         alt="Mystical Forest" 
         class="absolute inset-0 w-full h-full object-cover object-center animate-bg-focus" 
       />

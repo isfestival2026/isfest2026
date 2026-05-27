@@ -11,33 +11,19 @@
 
     <div class="relative z-10 flex flex-col items-center">
         
-        {{-- WADAH ANIMASI BUKU & PENA --}}
-        <div class="relative w-48 h-48 md:w-56 md:h-56 mb-8 drop-shadow-[0_0_30px_rgba(245,158,11,0.3)] flex justify-center items-center">
-            
-            {{-- 1. Buku Terbuka (Animasi Mengambang Naik Turun) --}}
-            <div class="absolute w-full h-full" style="animation: float 4s ease-in-out infinite;">
-                <img
-                    src="{{ asset('assets/book-open.png') }}"
-                    alt="Magic Book"
-                    class="w-full h-full object-contain"
-                />
-            </div>
-
-            {{-- 2. Pena Bulu Merah (Animasi Menulis) --}}
-            <div 
-                class="absolute -right-4 -top-8 w-28 h-28 md:w-32 md:h-32 z-10"
-                style="animation: write 1.5s ease-in-out infinite; transform-origin: bottom left;"
-            >
-                <img
-                    src="{{ asset('assets/quill-red.png') }}"
-                    alt="Magic Quill"
-                    class="w-full h-full object-contain drop-shadow-[5px_10px_5px_rgba(0,0,0,0.5)]"
-                />
-            </div>
-            
+        {{-- WADAH LOGO ISFEST --}}
+        <div 
+            class="relative w-40 h-40 md:w-48 md:h-48 mb-8 drop-shadow-[0_0_30px_rgba(245,158,11,0.4)] flex justify-center items-center"
+            style="animation: float 4s ease-in-out infinite;"
+        >
+            <img
+                src="{{ asset('logo/logo-isfest.png') }}"
+                alt="ISFEST 2026 Logo"
+                class="w-full h-full object-contain"
+            />
         </div>
 
-        {{-- Teks Intro (Menggunakan class font-cinzel yang sudah kita definisikan di layout utama) --}}
+        {{-- Teks Intro --}}
         <h1 class="font-cinzel text-3xl md:text-5xl font-bold text-[#ffec1f] tracking-widest text-center drop-shadow-lg mb-3">
             ISFEST 2026
         </h1>
@@ -45,7 +31,7 @@
         <div class="flex items-center gap-3 mt-2">
             <div class="w-4 h-4 rounded-full border-t-2 border-r-2 border-[#ffec1f] animate-spin"></div>
             <p class="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">
-                Menuliskan Takdir Asrama...
+                Mempersiapkan Arena...
             </p>
         </div>
     </div>
@@ -57,40 +43,33 @@
             50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
-        
-        /* Animasi pena seakan-akan sedang menulis (kombinasi rotasi dan geser kecil) */
-        @keyframes write {
-            0% { transform: rotate(0deg) translate(0px, 0px); }
-            25% { transform: rotate(-5deg) translate(-5px, 5px); }
-            50% { transform: rotate(5deg) translate(5px, -5px); }
-            75% { transform: rotate(-2deg) translate(-2px, 2px); }
-            100% { transform: rotate(0deg) translate(0px, 0px); }
-        }
     </style>
 </div>
 
-{{-- SCRIPT PENGGANTI useEffect UNTUK MENGATUR WAKTU & SESSION --}}
+{{-- SCRIPT MENGATUR WAKTU & SESSION --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Tetap menggunakan 'load' agar dia menunggu background raksasa beres di-download
+    window.addEventListener('load', function() {
         const splashScreen = document.getElementById('splash-screen');
         
+        if (!splashScreen) return;
+
         // Cek session storage agar animasi hanya jalan 1x per sesi browser
         const hasSeenIntro = sessionStorage.getItem('hasSeenIsfestIntro');
         
         if (hasSeenIntro) {
-            // Jika sudah pernah melihatnya, langsung hapus elemen tanpa menungggu animasi
+            // Jika sudah pernah melihatnya, langsung hapus elemen
             splashScreen.remove();
             return;
         }
 
-        // Mulai animasi memudar setelah 2.5 detik
+        // Mulai animasi memudar setelah 2.5 detik (memberi waktu user menikmati animasi)
         setTimeout(() => {
             splashScreen.classList.remove('opacity-100');
             splashScreen.classList.add('opacity-0', 'pointer-events-none');
         }, 2500);
 
         // Hapus komponen sepenuhnya dari struktur HTML setelah 3.5 detik 
-        // (1 detik setelah transisi memudar selesai)
         setTimeout(() => {
             splashScreen.remove();
             sessionStorage.setItem('hasSeenIsfestIntro', 'true');

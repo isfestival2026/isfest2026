@@ -1,3 +1,17 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+
+    $mascotUrl = '';
+    try {
+        // Meminta URL sementara dari Backblaze (berlaku 60 menit)
+        // Pastikan path foldernya persis: Assets/Mascot/mascot-wand.png
+        $mascotUrl = Storage::disk('s3')->temporaryUrl('Assets/Mascot/mascot-wand.png', now()->addMinutes(60));
+    } catch (\Exception $e) {
+        // Fallback aman: Jika .env belum disetting atau sedang offline, pakai gambar lokal
+        $mascotUrl = asset('mascot/mascot-wand.png');
+    }
+@endphp
+
 <div class="relative flex flex-col items-center w-full">
     
     <style>
@@ -11,7 +25,6 @@
     </style>
 
     {{-- Gelembung Mantra Penyihir --}}
-    {{-- PERBAIKAN: Menggunakan bottom-full agar selalu di atas kepala, ukuran teks dan padding mengecil di mobile --}}
     <div 
         id="mascot-bubble" 
         class="absolute bottom-full mb-3 z-20 w-max max-w-[150px] md:max-w-[220px] bg-[#223753]/95 border border-[#ffec1f]/40 p-2.5 md:px-4 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-xs text-slate-100 shadow-xl transition-all duration-300 backdrop-blur-md text-center font-medium opacity-0 scale-95 translate-y-2 pointer-events-none"
@@ -21,16 +34,18 @@
     </div>
 
     {{-- Area Sensitif Sentuhan/Hover Maskot --}}
-    {{-- PERBAIKAN: Menggunakan h-auto agar rasio gambar menyesuaikan lebar parent (w-28 dll) dari home.blade.php --}}
     <div 
         id="mascot-trigger"
         class="relative w-full h-auto cursor-pointer animate-mascot-float group"
     >
         <div class="absolute inset-0 bg-[#ffec1f]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        
+        {{-- Pemanggilan Gambar Dinamis dari Backblaze/Lokal --}}
         <img
-            src="{{ asset('mascot/mascot-wand.png') }}"
+            src="{{ $mascotUrl }}"
             alt="ISFEST 2026 Wizard Mascot"
             class="w-full h-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-[1.05]"
+            onerror="this.src='{{ asset('images/logo-frog.png') }}'" 
         />
     </div>
 
