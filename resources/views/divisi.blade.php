@@ -221,7 +221,6 @@ $sovereign   = $divisi[0];
 $otherDivisi = array_slice($divisi, 1);
 @endphp
 
-<<<<<<< HEAD
 {{-- ===== SOVEREIGN SINGLE CARD ===== --}}
 <div class="max-w-6xl mx-auto px-6 pt-10">
 
