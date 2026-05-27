@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PendaftaranController;
 
 Route::get('/', function () {
     return view('home');
@@ -10,14 +11,11 @@ Route::get('/', function () {
 # =======
 # PENDAFTARAN
 # =======
-Route::get('/daftar', function () {
-    // 'login.daftar' memanggil file daftar.blade.php di dalam folder login
-    return view('login.daftar'); 
-})->name('daftar');
+// Jalur untuk memuat halaman form pendaftaran
+Route::get('/daftar', [PendaftaranController::class, 'index'])->name('daftar');
 
-Route::post('/submit-pendaftaran', function (Request $request) {
-    dd($request->all()); 
-})->name('submit.pendaftaran');
+// Jalur untuk memproses pengiriman data formulir
+Route::post('/submit-pendaftaran', [PendaftaranController::class, 'store'])->name('submit.pendaftaran');
 
 
 
