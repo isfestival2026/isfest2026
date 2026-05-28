@@ -1,4 +1,19 @@
 {{-- resources/views/components/home/modal-note.blade.php --}}
+
+@php
+    use Illuminate\Support\Facades\Storage;
+
+    $boardUrl = '';
+
+    try {
+        // Tarik URL sementara dari Backblaze (berlaku 60 menit)
+        $boardUrl = Storage::disk('s3')->temporaryUrl('Assets/Elements/decorative-board.png', now()->addMinutes(60));
+    } catch (\Exception $e) {
+        // Fallback aman kalau konfigurasi S3 belum jalan atau sedang ngetes di MacBook
+        $boardUrl = asset('assets/decorative-board.png');
+    }
+@endphp
+
 <template x-teleport="body">
     <div x-show="showNote"
          x-transition:enter="transition ease-out duration-300"
@@ -11,7 +26,9 @@
          style="display: none;">
 
         <div @click.away="showNote = false" class="relative w-full max-w-md mx-auto">
-            <img src="{{ asset('assets/decorative-board.png') }}" class="w-full h-auto drop-shadow-2xl pointer-events-none block" alt="Decorative Board">
+            
+            {{-- Menggunakan variabel $boardUrl dari Backblaze --}}
+            <img src="{{ $boardUrl }}" class="w-full h-auto drop-shadow-2xl pointer-events-none block" alt="Decorative Board">
             
             <div class="absolute top-[24%] bottom-[24%] left-[22%] right-[22%] flex flex-col items-center justify-center text-center">
                 <h3 class="text-xl sm:text-2xl font-serif font-extrabold text-[#5c2118] mb-1">ISFEST 2026</h3>

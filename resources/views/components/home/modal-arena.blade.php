@@ -1,4 +1,19 @@
 {{-- resources/views/components/home/modal-arena.blade.php --}}
+
+@php
+    use Illuminate\Support\Facades\Storage;
+
+    $blankPaperUrl = '';
+
+    try {
+        // Tarik URL sementara dari Backblaze (berlaku 60 menit)
+        $blankPaperUrl = Storage::disk('s3')->temporaryUrl('Assets/Elements/blank-paper.png', now()->addMinutes(60));
+    } catch (\Exception $e) {
+        // Fallback aman kalau konfigurasi S3 belum jalan atau sedang ngetes di MacBook
+        $blankPaperUrl = asset('assets/blank-paper.png');
+    }
+@endphp
+
 <template x-teleport="body">
     <div x-show="showArena"
          x-transition:enter="transition ease-out duration-300"
@@ -12,7 +27,8 @@
 
         <div @click.away="showArena = false" class="relative w-full max-w-lg mx-auto">
             
-            <img src="{{ asset('assets/blank-paper.png') }}" class="w-full h-auto drop-shadow-2xl pointer-events-none block" alt="Blank Paper">
+            {{-- Menggunakan variabel $blankPaperUrl dari Backblaze --}}
+            <img src="{{ $blankPaperUrl }}" class="w-full h-auto drop-shadow-2xl pointer-events-none block" alt="Blank Paper">
 
             <div class="absolute top-[12%] bottom-[15%] left-[15%] right-[15%] flex flex-col overflow-y-auto">
                 <h2 class="text-2xl sm:text-3xl font-serif font-bold text-[#5c2118] text-center mb-4 border-b-2 border-[#5c2118]/30 pb-2">
