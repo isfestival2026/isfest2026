@@ -377,7 +377,7 @@
       <div class="cell cell-visi fi" style="transition-delay:.07s">
         <span class="v-icon">🔮</span>
         <h3>Visi</h3>
-        <p class="v-teaser">Hover untuk membaca visi ISFEST 2026…</p>
+        <p class="v-teaser">ISFEST 2026…</p>
         <div class="v-full">
           <h3>🔮 Visi</h3>
           <p>Menjadi wadah pengembangan generasi muda yang unggul, adaptif, dan berdaya saing
